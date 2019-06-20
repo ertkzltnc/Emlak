@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "Musteriler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Emlak.Model.Entities;
+@model List<Musteri>
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Musteriler
+                </div>
+                <div class="block-controls">
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+                    &nbsp;
+                    <a href="/Musteri/MusteriEkle" class="btn btn-success rounded" role="button">Musteri Ekle</a>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <label>Fitrele:</label>
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Bilgi Giriniz">
+                    <br />
+                    <br />
+                    <table class="table table-striped table-hover" id="myTable">
+                        <thead>
+                            <tr>
+
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>Cep Telefonu</th>
+                                <th>Ev Telefonu</th>
+                                <th>E-Posta</th>
+                                <th>Adres</th>
+                                <th>Mahalle</th>
+                                <th>Ilce</th>
+                                <th>Il</th>
+                                <th>Ilan Ver</th>
+                                <th>Ilan Ara</th>
+                                <th>Sil</th>
+                                <th>Guncelle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Musteri musteri in Model)
+                            {
+                                <tr>
+
+                                    <td>@musteri.Ad</td>
+                                    <td>@musteri.Soyad</td>
+                                    <td>@musteri.CepTelefonu</td>
+                                    <td>@musteri.EvTelefonu</td>
+                                    <td>@musteri.Eposta</td>
+                                    <td>@musteri.AdresAyrinti</td>
+                                    <td>@musteri.Mahalle.Ad</td>
+                                    <td>@musteri.Ilce.Ad</td>
+                                    <td>@musteri.Il.Ad</td>
+                                    <td><a href="~/Ilan/IlanEkle/?id=@musteri.ID" class="btn btn-info rounded">Ilan Ver</a></td>
+                                    <td><a href="~/Ilan/Index" class="btn btn-info rounded ">Ilan Ara</a></td>
+                                    <td><a href=# class="btn btn-danger rounded musteriSil" data-musteriID="@musteri.ID">Sil</a></td>
+                                    <td><a href="/Musteri/MusteriGuncelle/?id=@musteri.ID" class="btn btn-info rounded ">Güncelle</a></td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+
+    @*Mevcut musterile tablosunda girilen anahtar kelime ile search yapmak*@
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        //Musteri silme icin önce alert ile soruyoruz ve onay durumuna göre silme yapıyoruz
+        $(".musteriSil").click(function () {
+            var answer = confirm("Kayıt silinsin mi?");
+            if (answer == true) {
+
+                var musteriID = $(this).attr("data-musteriID");
+                $.ajax({
+                    type: "POST",
+                    url: "/Musteri/MusteriSil/" + musteriID,
+                    success: function () {
+                        alert("Kayıt Silindi.");
+                        window.location.replace("/Musteri/Index");
+                    },
+                    error: function () {
+                        alert("Kayıt Silme Sırasında Hata Oluştu!");
+                    },
+                })
+            }
+            else {
+                alert("İptal e basıldı");
+            }
+        });
+    </script>
+}
+

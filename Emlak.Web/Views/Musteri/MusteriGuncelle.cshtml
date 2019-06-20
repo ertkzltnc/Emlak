@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "MusteriBilgiGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Emlak.Model.Entities;
+@model Musteri
+<div class="row">
+    <div class="col-md-12 ">
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Musteri Bilgileri Guncelle
+                </div>
+                <div class="block-controls">
+                    <a href="/Musteri/Index"><span aria-hidden="true" class="icon icon-cross icon-size-medium block-control-remove"></span></a>
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+                </div>
+            </div>
+            <div class="block-content-outer">
+
+                <div class="block-content-inner">
+                    <form action="/Musteri/MusteriGuncelle" method="post" role="form">
+                        <input type="hidden" name="ID" value="@Model.ID">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Ad</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" name="Ad" placeholder="Ad" value="@Model.Ad">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Soyad</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" name="Soyad" placeholder="Soyad" value="@Model.Soyad">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Cep Telefonu</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" name="CepTelefonu" placeholder="Cep Telefonu" value="@Model.CepTelefonu">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Ev Telefonu</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" name="EvTelefonu" placeholder="Ev Telefonu" value="@Model.EvTelefonu">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Eposta</label>
+                            <input type="email" class="form-control" id="exampleInputPassword1" name="Eposta" placeholder="Eposta" value="@Model.Eposta">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Adres</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" name="AdresAyrinti" placeholder="Adres" value="@Model.AdresAyrinti">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Il</label>
+                            <select class="form-control" name="IlID" id="IlDropDown" onchange="IlceListele()">
+                                @foreach (Il il in ViewBag.ilList)
+                                {
+                                    if (il.ID == Model.Il.ID)
+                                    {
+                                        <option value="@il.ID" selected>@il.Ad</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@il.ID">@il.Ad</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Ilce</label>
+                            <select class="form-control" name="IlceID" id="IlceDropDown" onchange="MahalleListele()">
+                                @foreach (Ilce ilce in ViewBag.ilceList)
+                                {
+                                    if (ilce.ID == Model.Ilce.ID)
+                                    {
+                                        <option value="@ilce.ID" selected>@ilce.Ad</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@ilce.ID">@ilce.Ad</option>
+
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Mahalle</label>
+                            <select class="form-control" name="MahalleID" id="MahalleDropDown">
+                                @foreach (Mahalle mahalle in ViewBag.mahalleList)
+                                {
+                                    if (mahalle.ID == Model.Mahalle.ID)
+                                    {
+                                        <option value="@mahalle.ID" selected>@mahalle.Ad</option>
+                                    }
+
+
+                                }
+                            </select>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">Guncelle</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    @*Il,Ilce ve Mahalle bir birlerine bagımlı olarak getiriyoruz*@
+    <script>
+        <script>
+            function IlceListele() {
+                var ilID = $("#IlDropDown").val();
+
+                $.ajax({
+                url: '/EmlakOfisi/IlceGetir',
+                    data: {ilID: ilID },
+            type: 'POST',
+            dataType: 'json',
+                    success: function (result) {
+                console.log(result);
+            $("#IlceDropDown").empty();
+                        for (var i = 0; i < result.length; i++) {
+                $("#IlceDropDown").append("<option value='" + result[i].Value + "'>" + result[i].Text + "</option>");
+            }
+        },
+                    error: function (exception) {
+                alert(exception);
+            },
+        });
+}
+
+    </script>
+    <script>
+                function MahalleListele() {
+                    var ilceID = $("#IlceDropDown").val();
+
+                    $.ajax({
+                    url: '/EmlakOfisi/MahalleGetir',
+                        data: {ilceID: ilceID },
+                type: 'POST',
+                dataType: 'json',
+                        success: function (result) {
+                    console.log(result);
+                $("#MahalleDropDown").empty();
+                            for (var i = 0; i < result.length; i++) {
+                    $("#MahalleDropDown").append("<option value='" + result[i].Value + "'>" + result[i].Text + "</option>");
+                }
+            },
+                        error: function (exception) {
+                    alert(exception);
+                },
+            });
+}
+    </script>
+
+}
+

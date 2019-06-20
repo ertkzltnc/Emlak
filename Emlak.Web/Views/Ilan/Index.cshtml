@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewBag.Title = "Ilanlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Emlak.Model.Entities;
+@model List<Fotograf>
+<div class="row">
+    <div class="col-md-12">
+
+
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Konutlar
+                    <table class="table table-condensed table-striped table-bordered table-hover">
+                        <tr>
+
+                            <td>
+                                <select class="form-control">
+                                    <option>Ilan Tur Seciniz</option>
+                                    @foreach (IlanTur ilanTur in ViewBag.ilanTurList)
+                                    {
+                                        <option value="@ilanTur.ID">@ilanTur.Ad</option>
+
+                                    }
+                                </select>
+
+                            </td>
+
+                            <td>
+                                <select class="form-control" id="IlDropDown" onchange="IlceListele()">
+                                    <option>Il Seciniz</option>
+                                    @foreach (Il il in ViewBag.iLList)
+                                    {
+                                        <option value="@il.ID">@il.Ad</option>
+                                    }
+                                </select>
+
+                            </td>
+
+                            <td>
+                                <select class="form-control" id="IlceDropDown" onchange="MahalleListele()">
+                                    <option>Ilce Seciniz</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="MahalleDropDown">
+                                    <option>Mahalle Seciniz</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" id="minTl" onkeyup="minTlFonk()" class="form-control input-sm text-right" placeholder="Min TL" size="3" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control input-sm text-right" placeholder="Max TL" size="3" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control input-sm text-right" placeholder="Oda Sayisi" size="3" />
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="block-controls">
+                    <a href="/Musteri/Index"><span aria-hidden="true" class="icon icon-cross icon-size-medium block-control-remove"></span></a>
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <div class="table-responsive">
+                        <form role="form">
+                            <table id="searchTable" class="table table-striped @*table-striped table-bordered*@ table-hover">
+
+                                <thead>
+                                    <tr>
+
+                                        <th class="text-center col-xs-1">Resim</th>
+                                        <th class="text-center  col-xs-2">Ilan Baslığı</th>
+                                        <th class="text-center  col-xs-1">Metrekare</th>
+                                        <th class="text-center  col-xs-1">Oda Sayısı</th>
+                                        <th class="text-center  col-xs-1">Ilan Turu</th>
+                                        <th class="text-center col-xs-1 th-">Fiyat</th>
+                                        <th class="text-center  col-xs-1">Ilce</th>
+                                        <th class="text-center  col-xs-1">Il</th>
+                                        <th class="text-center col-xs-1">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (Fotograf resim in Model)
+                                    {
+
+                                        <tr>
+
+                                            <td><img src="@String.Format("data:image/jpg;base64,{0}",resim.Base64String)" alt=" Kategori Resim" width="100" height="100" /></td>
+                                            <td>@resim.Konut.Baslik</td>
+                                            <td>@resim.Konut.Metrekare</td>
+                                            <td>@resim.Konut.OdaSayisi</td>
+                                            <td>@resim.Konut.IlanTur.Ad</td>
+                                            <td>@resim.Konut.Fiyat</td>
+                                            <td>@resim.Konut.Ilce.Ad</td>
+                                            <td>@resim.Konut.Il.Ad</td>
+                                            <td><a href="/Ilan/KonutDetay/?id=@resim.ID" class="btn btn-info rounded ">Detay</a></td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="help-text"></div>
+                            <ul class="pagination">
+                                <li class="disabled"><a href="#">&laquo;</a></li>
+                                <li class="active"><a href="#"><span>1 <span class="sr-only">(current)</span></span></a></li>
+
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@*Il,Ilce ve Mahalle birbirine baglı gelmesi icin*@
+@section head{
+
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    <script>
+        function IlceListele() {
+            var ilID = $("#IlDropDown").val();
+
+            $.ajax({
+                url: '/EmlakOfisi/IlceGetir',
+                data: { ilID: ilID },
+                type: 'POST',
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    $("#IlceDropDown").empty();
+                    for (var i = 0; i < result.length; i++) {
+                        $("#IlceDropDown").append("<option value='" + result[i].Value + "'>" + result[i].Text + "</option>");
+                    }
+                },
+                error: function (exception) {
+                    alert(exception);
+                },
+            });
+        }
+
+    </script>
+    <script>
+        function MahalleListele() {
+            var ilceID = $("#IlceDropDown").val();
+
+            $.ajax({
+                url: '/EmlakOfisi/MahalleGetir',
+                data: { ilceID: ilceID },
+                type: 'POST',
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    $("#MahalleDropDown").empty();
+                    for (var i = 0; i < result.length; i++) {
+                        $("#MahalleDropDown").append("<option value='" + result[i].Value + "'>" + result[i].Text + "</option>");
+                    }
+                },
+                error: function (exception) {
+                    alert(exception);
+                },
+            });
+        }
+    </script>
+
+
+}

@@ -1,0 +1,102 @@
+﻿
+
+@{
+    ViewBag.Title = "Profil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Emlak.Model.Entities;
+@model EmlakOfisi
+<div class="row">
+    <div class="col-md-6">
+        <h1>
+            <span aria-hidden="true" class="icon icon"></span>
+            <span class="main-text">
+                Emlak Profili
+            </span>
+        </h1>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- START Block: Order View -->
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <div id="order-view-content" class="table-responsive">
+                        <ul id="order-view-tabs" class="nav nav-tabs tabs-left">
+                            <li class="active"><a href="#order-view-tabs-order-details" data-toggle="tab">Emlakcı Bilgileri</a></li>
+                            <li><a href="#order-view-tabs-payment" data-toggle="tab">Emlak Adres Bilgileri</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="order-view-tabs-order-details" class="tab-pane active">
+                                <table class="table table-hover">
+                                    <tbody>
+
+                                        <tr>
+                                            <td class="col-md-3">Ad</td>
+                                            <td class="col-md-9">@Model.Ad</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Yetkili Kişi</td>
+                                            <td class="col-md-9">@Model.Yetkili</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Eposta</td>
+                                            <td class="col-md-9">@Model.Eposta</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Telefon</td>
+                                            <td class="col-md-9">@Model.CepTelefonu</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Telefon</td>
+                                            <td class="col-md-9">@Model.Fax</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="order-view-tabs-payment" class="tab-pane active">
+                                <table class="table table-hover">
+                                    <tbody>
+
+                                        <tr>
+                                            <td class="col-md-3"> Adres</td>
+                                            <td class="col-md-9">@Model.AdresAyrinti</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Il</td>
+                                            <td class="col-md-9">@Model.Il.Ad</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Ilce</td>
+                                            <td class="col-md-9">@Model.Ilce.Ad</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-3">Mahalle</td>
+                                            <td class="col-md-9">@Model.Mahalle.Ad</td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Block: Order View -->
+
+    </div>
+</div>
+

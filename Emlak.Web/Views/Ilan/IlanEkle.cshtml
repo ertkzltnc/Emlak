@@ -1,0 +1,313 @@
+﻿
+@{
+    ViewBag.Title = "IlanEkle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Emlak.Model.Entities;
+@model Musteri
+<div class="row">
+    <div class="col-md-12">
+
+
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Konut Ekle
+                </div>
+                <div class="block-controls">
+                    <a href="/Musteri/Index"><span aria-hidden="true" class="icon icon-cross icon-size-medium block-control-remove"></span></a>
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <form action="/Ilan/IlanEkle" method="post" enctype="multipart/form-data" class="form-horizontal product-edit" role="form">
+                        <input type="hidden" name="MusteriID" value="@Model.ID">
+                        <ul id="product-edit-tabs" class="nav nav-tabs tabs-alt-1">
+                            <li class="active"><a href="#product-edit-tabs-general" data-toggle="tab">Genel Bilgiler</a></li>
+                            <li><a href="#product-edit-tabs-data" data-toggle="tab">Veriler</a></li>
+                            <li><a href="#product-edit-tabs-more" data-toggle="tab">Ayrıntılar</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="product-edit-tabs-general">
+                                <div class="form-group">
+                                    <label for="product-name" class="col-sm-2 col-md-2 control-label">
+                                        Ilan  Baslığı
+                                        <span class="required-item">*</span>
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="Baslik" placeholder="Ilan Baslığı Giriniz" required name="Baslik">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="meta-desc" class="col-sm-2 col-md-2 control-label">
+                                        Ilan Aciklama
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <textarea class="form-control" id="Aciklama" rows="4" placeholder="Konut hakkında detayli acıklama yapınız..!" name="Aciklama" required></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane" id="product-edit-tabs-data">
+                                <div class="form-group">
+                                    <label for="product-model" class="col-sm-2 col-md-2 control-label">
+                                        Adres
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="AdresAyrinti" name="Adres" required placeholder="Adres Giriniz">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-sku" class="col-sm-2 col-md-2 control-label">
+                                        Il
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" id="IlDropDown" name="IlID" onchange="IlceListele()">
+                                            <option>Il Seciniz</option>
+                                            @foreach (Il il in ViewBag.iLList)
+                                            {
+                                                <option value="@il.ID">@il.Ad</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-sku" class="col-sm-2 col-md-2 control-label">
+                                        Ilce
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" id="IlceDropDown" name="IlceID" onchange="MahalleListele()">
+                                            <option>Ilce Seciniz</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-sku" class="col-sm-2 col-md-2 control-label">
+                                        Mahalle
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" id="MahalleDropDown" name="MahalleID">
+                                            <option>Mahalle Seciniz</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-location" class="col-sm-2 col-md-2 control-label">
+                                        Ilan Turu
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="IlanTuruID">
+                                            <option>Ilan  Turu Seciniz</option>
+                                            @foreach (IlanTur ilanTur in ViewBag.ilanTurList)
+                                            {
+
+                                                <option value="@ilanTur.ID">@ilanTur.Ad</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-location" class="col-sm-2 col-md-2 control-label">
+                                        Isitma Turu
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="IsitmaTurID">
+                                            <option>Isitma Tur Seciniz</option>
+                                            @foreach (IsitmaTur isitmaTur in ViewBag.isitmaTurList)
+                                            {
+
+                                                <option value="@isitmaTur.ID">@isitmaTur.Ad</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-location" class="col-sm-2 col-md-2 control-label">
+                                        Fiyat
+                                    </label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control" id="Fiyat" name="Fiyat" required placeholder="Format: $1234.56">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label for="exampleInputPassword1">Resim:</label>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <img src="" alt="Konut Resim" width="100" height="100" id="picture" />
+
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <input name="Resim" type="file" id="file" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label for="exampleInputPassword1">Resim:</label>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <img src="" alt="Kategori Resim" width="100" height="100" id="picture2" />
+
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <input name="Resim2" type="file" id="file2" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="tab-pane" id="product-edit-tabs-more">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-md-2 control-label">Metrekare</label>
+                                    <div class="col-sm-2">
+                                        <input autocomplete="off" class="form-control" id="MetreKare" placeholder="Format: 160" type="number" name="Metrekare" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-md-2 control-label">Oda Sayisi</label>
+                                    <div class="col-sm-2">
+                                        <input autocomplete="off" class="form-control" id="OdaSayisi" placeholder="0" type="number" name="OdaSayisi" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-md-2 control-label">Kat</label>
+                                    <div class="col-sm-2">
+                                        <input autocomplete="off" class="form-control" id="Kat" placeholder="0" type="number" name="Kat" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-md-2 control-label">Bina Kat</label>
+                                    <div class="col-sm-2">
+                                        <input autocomplete="off" class="form-control" id="BinaKat" placeholder="0" type="number" name="BinaKat" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-md-2 control-label">Bina Yas</label>
+                                    <div class="col-sm-2">
+                                        <input autocomplete="off" class="form-control" id="BinaYas" placeholder="0" type="number" name="BinaYasi" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+@section head{
+
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+
+    @*Resim dosya okuma ve anlık secilen resmi göstermek icic*@
+    <script>
+        $(document).ready(function () {
+            $("#file").on("change", function () {
+                const files = this.files;
+                console.log(files);
+
+                if (files.length > 0) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#picture').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(files[0]);
+                }
+
+            })
+
+        });
+
+
+    </script>
+    @*Birden fazla resim ekleme için*@
+    <script>
+        $(document).ready(function () {
+            $("#file2").on("change", function () {
+                const files = this.files;
+                console.log(files);
+
+                if (files.length > 0) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#picture2').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(files[0]);
+                }
+
+            })
+
+        });
+
+
+    </script>
+
+    @*IL,Ilce ve mahallle bir birine bağlı olarak gelmesini sağladık*@
+    <script>
+        function IlceListele() {
+            var ilID = $("#IlDropDown").val();
+
+            $.ajax({
+                url: '/EmlakOfisi/IlceGetir',
+                data: { ilID: ilID },
+                type: 'POST',
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    $("#IlceDropDown").empty();
+                    for (var i = 0; i < result.length; i++) {
+                        $("#IlceDropDown").append("<option value='" + result[i].Value + "'>" + result[i].Text + "</option>");
+                    }
+                },
+                error: function (exception) {
+                    alert(exception);
+                },
+            });
+        }
+
+    </script>
+    <script>
+        function MahalleListele() {
+            var ilceID = $("#IlceDropDown").val();
+
+            $.ajax({
+                url: '/EmlakOfisi/MahalleGetir',
+                data: { ilceID: ilceID },
+                type: 'POST',
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    $("#MahalleDropDown").empty();
+                    for (var i = 0; i < result.length; i++) {
+                        $("#MahalleDropDown").append("<option value='" + result[i].Value + "'>" + result[i].Text + "</option>");
+                    }
+                },
+                error: function (exception) {
+                    alert(exception);
+                },
+            });
+        }
+    </script>
+
+
+
+}
